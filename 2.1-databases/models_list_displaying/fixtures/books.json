@@ -13,8 +13,53 @@
     "pk": 2,
     "fields": {
       "name": "1984",
-      "author": "Джордж Оруэл",
+      "author": "Джордж Оруэ л",
       "pub_date": "2016-12-06"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 3,
+    "fields": {
+      "name": "Керри",
+      "author": "Стивен Кинг",
+      "pub_date": "2019-10-12"
+    }
+  },
+  {
+    "model": "books.book",
+    "pk": 4,
+    "fields": {
+      "name": "Аэропорт",
+      "author": "Артур Хэйли",
+      "pub_date": "2019-04-06"
+    }
+  },
+{
+    "model": "books.book",
+    "pk": 5,
+    "fields": {
+      "name": "Князь Клюква",
+      "author": "Борис Акунин",
+      "pub_date": "2017-10-31"
+    }
+  },
+{
+    "model": "books.book",
+    "pk": 6,
+    "fields": {
+      "name": "Бох и шельма",
+      "author": "Борис Акунин",
+      "pub_date": "2016-08-07"
+    }
+  },
+{
+    "model": "books.book",
+    "pk": 7,
+    "fields": {
+      "name": "Сияние",
+      "author": "Стивен Кинг",
+      "pub_date": "2018-09-10"
     }
   }
 ]

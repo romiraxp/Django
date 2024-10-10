@@ -55,7 +55,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': 'ваш пароль',
+        'PASSWORD': '2bdvdtJRom',
     }
 }
 
@@ -120,3 +120,4 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_CHARSET = 'utf-8'

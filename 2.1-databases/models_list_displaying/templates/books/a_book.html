@@ -5,16 +5,25 @@
 {% block content %}
     <div class="container">
         <div class="header">
-            <h1><a href="/books">Каталог</a></h1>
+            <h1><a href="{% url 'catalog' %}">Каталог</a></h1>
         </div>
         <div class="row">
-            {% for book in books %}
+            {% for book in a_book %}
                 <div class="book col-md-4">
                     <h2>{{ book.name }}</h2>
                     <p>Автор: {{ book.author }}</p>
                     <p>Дата публикации: {{ book.pub_date }}</p>
                 </div>
             {% endfor %}
+        </div>
+        <div class="page_date">
+            {% if page_prev %}
+                <a class="button button-primary" href="{% url 'date_page' page_prev %}">{{ page_prev }}</a>
+            {% endif %}
+
+            {% if page_next %}
+                <a class="button button-primary" href="{% url 'date_page' page_next %}">{{ page_next }}</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
