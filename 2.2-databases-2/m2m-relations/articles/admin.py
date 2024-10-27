@@ -5,19 +5,21 @@ from .models import Article, Tag, Scope
 
 class RelationshipInlineFormset(BaseInlineFormSet):
     def clean(self):
+        count = 0
         for form in self.forms:
-            # В form.cleaned_data будет словарь с данными
-            # каждой отдельной формы, которые вы можете проверить
-            form.cleaned_data
-            # вызовом исключения ValidationError можно указать админке о наличие ошибки
-            # таким образом объект не будет сохранен,
-            # а пользователю выведется соответствующее сообщение об ошибке
-            raise ValidationError('Тут всегда ошибка')
+            value_of_is_main = form.cleaned_data.get("is_main")
+            if value_of_is_main:
+                count += 1
+        if count > 1:
+            raise ValidationError('Основной раздел должен быть один')
+        elif count == 0:
+            raise ValidationError('Укажите основной раздел')
         return super().clean()  # вызываем базовый код переопределяемого метода
+
 class ScopeInline(admin.TabularInline):
     model = Scope
     extra = 0
-#    formset = RelationshipInlineFormset
+    formset = RelationshipInlineFormset
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):

@@ -6,6 +6,8 @@ class Tag(models.Model):
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
 
+    def __str__(self):
+        return self.tag_name
 
 class Article(models.Model):
 
@@ -33,3 +35,6 @@ class Scope(models.Model):
     class Meta:
         verbose_name = 'Тематика Статьи'
         verbose_name_plural = 'ТЕМАТИКИ СТАТЬИ'
+        ordering = ['-is_main']
+    def __str__(self):
+        return f'{self.article}'
