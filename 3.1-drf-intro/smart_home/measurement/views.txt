@@ -1,0 +1,129 @@
+# TODO: опишите необходимые обработчики, рекомендуется использовать generics APIView классы:
+# TODO: ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.generics import ListAPIView, RetrieveAPIView, DestroyAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Sensor, Measurement
+from .serializers import SensorSerializer, MeasurementsSerializer, SensorDetailSerializer
+# @api_view(['GET','POST'])
+# def sensor(request):
+#     if request.method == 'GET':
+#         sensors = Sensor.objects.all()
+#         datchik = SensorSerializer(sensors, many=True)
+#         return Response(datchik.data)
+#     if request.method == 'POST':
+#         return Response({'status':'ok'})
+
+# чтобы избежать ветвлений как выше через использование IF был придуман класс APIView
+# с использованием APIView
+
+# class SensorView(APIView):
+#     def get(self, request):
+#         sensors = Sensor.objects.all()
+#         datchik = SensorSerializer(sensors, many=True)
+#         return Response(datchik.data)
+#     def post(self, request):
+#         return Response({'status':'ok'})
+
+# с использованием ListAPIView
+
+# для получения информации о всех датчиках
+class SensorsView(ListAPIView):  # нужно указать откуда взять данные и для этого используется queryset
+    queryset = Sensor.objects.all()
+    # и второе с помощью чего нужно набор этих объектов превратить в JSON, т.е. указать сериализатор
+    serializer_class = SensorSerializer
+    def post(self, request):
+        serializer = SensorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def post(self, request):
+    #     serializer = SensorSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
+    #     else:
+    #         return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        # sensor_new = Sensor.objects.create(id= 4,name="ES56",description="test")
+        # #     id=request.data['id'],
+        # #     name=request.data['name'],
+        # #     description=request.data['description'],
+        # # )
+        # return Response({'post': Sensor(sensor_new)})
+        # # return Response({'status':'ok'})
+
+# для отображения датчика и соответствующих ему изменрений
+class SensorRetrView(RetrieveAPIView):
+    # здесь также укажем queryset - откуда взять данные
+    queryset = Sensor.objects.all()
+    # и сериализатор для конвертации в JSON
+    #serializer_class = SensorSerializer
+    serializer_class = SensorDetailSerializer
+    # после чего нужно зарегистрировать данный view- класс и прописать его в urls.py
+
+    def patch(self,request, pk):
+        sensor_id = Sensor.objects.get(id= pk)
+        serializer = SensorDetailSerializer(sensor_id, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_304_NOT_MODIFIED)
+    def delete(self,request, pk):
+        sensor_id = Sensor.objects.get(id= pk)
+        serializer = SensorDetailSerializer(sensor_id, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_304_NOT_MODIFIED)
+
+# для получения информации по одному какому- то элементу используетс RetrieveAPIView
+# class SensorCreate(CreateAPIView):
+#     queryset = Sensor.objects.all()
+#     serializer_class = SensorSerializer
+#     def post(self, request):
+#         serializer = SensorSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class SensorsUpdate(UpdateAPIView):  # нужно указать откуда взять данные и для этого используется queryset
+#     queryset = Sensor.objects.all()
+#     # и второе с помощью чего нужно набор этих объектов превратить в JSON, т.е. указать сериализатор
+#     serializer_class = SensorSerializer
+
+# для удаления датчика
+class SensorDelete(DestroyAPIView):
+    # здесь также укажем queryset - откуда взять данные
+    queryset = Sensor.objects.all()
+    # и сериализатор для конвертации в JSON
+    serializer_class = SensorSerializer
+
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     self.perform_destroy(instance)
+    #     return Response({"status": "not found"},status=status.HTTP_204_NO_CONTENT)
+    # if serializer_class.is_valid():
+    # # после чего нужно зарегистрировать данный view- класс и прописать его в urls.py
+    #     return Response({"status": "success"}, status=status.HTTP_200_OK)
+    # else:
+    #     return Response({"status": "not found"}, status=status.HTTP_404_NOT_FOUND)
+
+# для получения информации об измерениях из таблицы измерений Measurement
+class MeasurementView(ListAPIView):  # нужно указать откуда взять данные и для этого используется queryset
+    queryset = Measurement.objects.all()
+    # и второе с помощью чего нужно набор этих объектов превратить в JSON, т.е. указать сериализатор
+    serializer_class = MeasurementsSerializer
+    def post(self, request):
+        serializer = MeasurementsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
