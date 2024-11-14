@@ -74,9 +74,24 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
+    # DEFAULT_AUTHENTICATION_CLASSES используется для метода аутентификации. В данном случае по Токену.
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+
+    # DEFAULT_THROTTLE_CLASSES используется для ВСЕХ Viewset-ов
+    'DEFAULT_THROTTLE_CLASSES': [
+        # если мы здесь закомментируем, то можно настроить на отдельный ViewSet для авторизованных пользователей
+        'rest_framework.throttling.UserRateThrottle',
+        # если мы здесь закомментируем, то можно настроить на отдельный ViewSet для неавторизованных пользователей
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+
+    # DEFAULT_THROTTLE_RATES используется для ограничения кол-ва запросов посылаемых в единицу времени
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '20/minute',  # для авторизованных пользователей
+        'anon': '10/minute',  # для неавторизованных пользователей
+    }
 }
 
 WSGI_APPLICATION = 'api_with_restrictions.wsgi.application'
@@ -92,7 +107,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': '2bdvdtJRom'
+        'PASSWORD': 'ваш пароль'
     }
 }
 

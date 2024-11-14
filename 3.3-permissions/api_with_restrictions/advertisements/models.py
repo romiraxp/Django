@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.db import models
 
-
 class AdvertisementStatusChoices(models.TextChoices):
     """Статусы объявления."""
 
     OPEN = "OPEN", "Открыто"
     CLOSED = "CLOSED", "Закрыто"
+    DRAFT = "DRAFT", "Черновик"
 
 
 class Advertisement(models.Model):
@@ -28,3 +28,5 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    def __str__(self):
+        return f"{self.title}, {self.status}"
